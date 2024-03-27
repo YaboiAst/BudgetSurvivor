@@ -28,6 +28,19 @@ public class PlayerCombat : MonoBehaviour
         _playerNameText = GetComponent<TextMeshProUGUI>();
         playerName.AddRange(_playerNameText.text.ToCharArray());
         playerCurrentName.AddRange(_playerNameText.text.ToCharArray());
+        Vector2 size = _collider.size;
+        size = new Vector2( 0.37f * playerName.Count, size.y);
+        _collider.size = size;
+        
+        // Player damage scale inversely with the length of the player name
+        if (playerName.Count < 5)
+            playerDamage = 4;
+        else if (playerName.Count < 7)
+            playerDamage = 3;
+        else if (playerName.Count < 9)
+            playerDamage = 2;
+        else
+            playerDamage = 1;
     }
 
 
@@ -44,27 +57,32 @@ public class PlayerCombat : MonoBehaviour
     void Shoot()
     {
         CancelInvoke(nameof(Reload));
-        if (playerCurrentName.Count > 0) // Remove when die
-        {
-            var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.parent.rotation);
-            bullet.SetParent(this.transform.parent);
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.SetLetter(playerCurrentName[^1]);
-            bulletScript.SetDamage(playerDamage);
             
+        var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.parent.rotation);
+        bullet.SetParent(this.transform.parent);
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        bulletScript.SetLetter(playerCurrentName[^1]);
+        bulletScript.SetDamage(playerDamage);
             
-            // Removes last element of the playerCurrentName list
-            playerCurrentName.RemoveAt(playerCurrentName.Count - 1);
-            _playerNameText.text = new string(playerCurrentName.ToArray());
-            Vector2 size = _collider.size;
-            size = new Vector2(size.x - 0.37f, size.y);
-            _collider.size = size;
+        RemoveLetter();
+        
+        if(playerCurrentName.Count > 0)
             Invoke(nameof(Reload), reloadTime * 1.5f);
-        }
         else
         {
-            Debug.Log("No more bullets");
+            Destroy(this.gameObject);
         }
+        
+    }
+
+    public void RemoveLetter()
+    {
+        // Removes last element of the playerCurrentName list
+        playerCurrentName.RemoveAt(playerCurrentName.Count - 1);
+        _playerNameText.text = new string(playerCurrentName.ToArray());
+        Vector2 size = _collider.size;
+        size = new Vector2(size.x - 0.37f, size.y);
+        _collider.size = size;
     }
 
     void Reload()
