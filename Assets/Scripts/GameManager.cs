@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject errorOnInputField;
     private bool validName;
+    
     public void StartGame()
     {
         if (!validName)
