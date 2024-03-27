@@ -10,12 +10,28 @@ public class Enemy : MonoBehaviour
     private TextMeshProUGUI _enemyNameText;
 
     private BoxCollider2D _collider;
+
+    private Rigidbody2D _rb;
+    private Transform _target;
+    [SerializeField] private float speed = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
         _collider = GetComponent<BoxCollider2D>();
         _enemyNameText = GetComponent<TextMeshProUGUI>();
         _enemyName.AddRange(_enemyNameText.text.ToCharArray());
+
+        _target = GameObject.Find("Jogador").transform;
+    }
+
+    private void FixedUpdate() {
+        if(_target == null){
+            Debug.Log("No Target Found");
+        }
+
+        Vector3 moveDir = Vector3.right * (_target.position.x - transform.position.x) + Vector3.up * (_target.position.y - transform.position.y);
+        transform.Translate(moveDir.normalized * (speed * Time.fixedDeltaTime));
     }
 
     public void TakeDamage(int amount)
@@ -41,6 +57,12 @@ public class Enemy : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(other.gameObject.CompareTag("Player")){
+            other.transform.GetComponent<PlayerCombat>().RemoveLetter();
         }
     }
 }
