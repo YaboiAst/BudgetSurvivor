@@ -68,11 +68,6 @@ public class PlayerCombat : MonoBehaviour
         
         if(playerCurrentName.Count > 0)
             Invoke(nameof(Reload), reloadTime * 1.5f);
-        else
-        {
-            Destroy(this.gameObject);
-        }
-        
     }
 
     public void RemoveLetter()
@@ -82,6 +77,27 @@ public class PlayerCombat : MonoBehaviour
         _playerNameText.text = new string(playerCurrentName.ToArray());
         Vector2 size = _collider.size;
         size = new Vector2(size.x - 0.37f, size.y);
+        _collider.size = size;
+
+        if (playerCurrentName.Count == 0)
+        {
+            this.gameObject.SetActive(false);
+            Invoke(nameof(Die), 0.5f);
+        }
+    }
+
+    void Die()
+    {
+        GameManager.Instance.ShowDeathMenu(new string(playerName.ToArray()));
+        ResetPlayer();
+    }
+
+    void ResetPlayer()
+    {
+        playerCurrentName.AddRange(playerName);
+        _playerNameText.text = new string(playerCurrentName.ToArray());
+        Vector2 size = _collider.size;
+        size = new Vector2( 0.37f * playerName.Count, size.y);
         _collider.size = size;
     }
 
