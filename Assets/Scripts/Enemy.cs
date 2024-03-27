@@ -62,7 +62,9 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other) {
         if(other.gameObject.CompareTag("Player")){
-            other.transform.GetComponent<PlayerCombat>().RemoveLetter();
+            PlayerCombat playerCombat = other.gameObject.GetComponent<PlayerCombat>();
+            playerCombat.RemoveLetter();
+            playerCombat.Invencibility();
         }
     }
 }

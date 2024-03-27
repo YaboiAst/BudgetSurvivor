@@ -21,6 +21,9 @@ public class PlayerCombat : MonoBehaviour
     
     private  int playerDamage = 1;
     private BoxCollider2D _collider;
+    
+    private float _invencibilityTime = 1f;
+    private float _invencibilityTimer = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,9 +50,14 @@ public class PlayerCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Shoot();
+        }
+        
+        if (_invencibilityTimer > 0)
+        {
+            _invencibilityTimer -= Time.deltaTime;
         }
     }
     
@@ -72,6 +80,8 @@ public class PlayerCombat : MonoBehaviour
 
     public void RemoveLetter()
     {
+        if (_invencibilityTimer > 0) return;
+        
         // Removes last element of the playerCurrentName list
         playerCurrentName.RemoveAt(playerCurrentName.Count - 1);
         _playerNameText.text = new string(playerCurrentName.ToArray());
@@ -84,6 +94,11 @@ public class PlayerCombat : MonoBehaviour
             this.gameObject.SetActive(false);
             Invoke(nameof(Die), 0.5f);
         }
+    }
+    
+    public void Invencibility()
+    {
+        _invencibilityTimer = _invencibilityTime;
     }
 
     void Die()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -56,10 +57,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowMainMenu()
     {
-        mainMenu.SetActive(true);
-        spawner.SetActive(false);
-        player.SetActive(false);
-        deathMenu.SetActive(false);
+        SceneManager.LoadScene(0);
     }
     
     public void ShowDeathMenu(string playerName)
