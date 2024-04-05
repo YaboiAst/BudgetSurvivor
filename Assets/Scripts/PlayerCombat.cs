@@ -17,12 +17,12 @@ public class PlayerCombat : MonoBehaviour
     
     private TextMeshProUGUI _playerNameText;
     
-    public float reloadTime = 0.5f;
+    public float reloadTime = 0.6f;
     
     private  int playerDamage = 1;
     private BoxCollider2D _collider;
     
-    private float _invencibilityTime = 1f;
+    private float _invencibilityTime = 0.5f;
     private float _invencibilityTimer = 0f;
     // Start is called before the first frame update
     void Start()

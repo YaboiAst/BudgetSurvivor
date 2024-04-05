@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rb;
     private Transform _target;
     [SerializeField] private float speed = 1f;
+    private bool canDamagePlayer = true;
+    private PlayerCombat playerCombat;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,7 @@ public class Enemy : MonoBehaviour
 
         _target = GameObject.Find("Jogador").transform;
     }
+    
 
     private void FixedUpdate() {
         if(_target == null){
@@ -62,9 +65,16 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other) {
         if(other.gameObject.CompareTag("Player")){
-            PlayerCombat playerCombat = other.gameObject.GetComponent<PlayerCombat>();
+            canDamagePlayer = true;
+            playerCombat = other.gameObject.GetComponent<PlayerCombat>();
             playerCombat.RemoveLetter();
             playerCombat.Invencibility();
+        }
+    }
+    
+    private void OnCollisionExit2D(Collision2D other) {
+        if(other.gameObject.CompareTag("Player")){
+            canDamagePlayer = false;
         }
     }
 }
